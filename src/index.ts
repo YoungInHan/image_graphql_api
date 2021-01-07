@@ -6,7 +6,7 @@ import { connect } from "mongoose";
 
 @Resolver()
 class HelloResolver {
-    @Query(() => String)
+    @Query(() => String, {nullable: true})
     async hello() {
         return "Hello World"
     }
@@ -15,10 +15,12 @@ class HelloResolver {
 const main = async () => {
     const schema = await buildSchema({
         resolvers: [HelloResolver],
+        dateScalarMode: "timestamp",
     });
 
-    // const mongoose = await connect('mongodb://localhost:27017/test', {useNewUrlParser: true});
-    // await mongoose.connection;
+    const mongoose = await connect('mongodb+srv://newUser:ujJc2AAKcl6RwYJr@cluster0.iwhph.mongodb.net/Cluster0?retryWrites=true&w=majority',  
+        { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connection;
 
     const server = new ApolloServer({ schema });
     const app = Express();
