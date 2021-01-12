@@ -14,13 +14,21 @@ export class PictureResolver {
     };
 
     @Query(() => [Picture])
-    async returnAllPictures(){
-      return await PictureModel.find();
+    async returnAllPictures() : Promise<Picture[] | null> {
+      const picture = await PictureModel.find();
+      for (let i = 0; i < picture.length; i++) {
+        await picture[i].populate("uploader").execPopulate();
+      }
+      return picture
     };
 
     @Query(() => [Picture])
-    async returnAllMyPictures(){
-      return await PictureModel.find();
+    @UseMiddleware(isAuth)
+    async returnCurrentUserPictures(
+      @Ctx() ctx: MyContext
+    ) : Promise<Picture[] | null>{
+      const picture = await PictureModel.find({uploader: ctx.req.session.userId});
+      return picture
     };
 
     @Mutation(() => Picture)
@@ -43,9 +51,8 @@ export class PictureResolver {
             uploader: user!._id
         });
         await picture.save();
-        console.log(picture)
+
         await picture.populate("uploader").execPopulate();
-        console.log(picture)
         return picture;
     };
 
