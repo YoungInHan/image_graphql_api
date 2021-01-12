@@ -40,6 +40,10 @@
     },
     "scripts": {
         "start": "nodemon --exec ts-node src/index.ts",
-        "start:staging": "ts-node src/index.ts"
+        "start:staging": "node src/index.js",
+        "postinstall": "tsc"
+    },
+    "engines": {
+        "node": "12.16.3"
     }
 }

@@ -1,1 +1,1 @@
-web: yarn start:staging
+web: node src/index.js
