@@ -8,7 +8,7 @@ import connectRedis from 'connect-redis'
 import cors from 'cors'
 
 import { redis } from './redis'
-//import { PictureResolver } from './resolver/Picture-resolver'
+import { PictureResolver } from './resolver/Picture-resolver'
 import { UserResolver } from './resolver/User-resolver'
 
 import dotenv from 'dotenv'
@@ -21,7 +21,7 @@ const main = async () => {
     await mongoose.connection;
 
     const schema = await buildSchema({
-        resolvers: [UserResolver],
+        resolvers: [UserResolver, PictureResolver],
         dateScalarMode: "timestamp",
     });
 
@@ -56,7 +56,7 @@ const main = async () => {
     );
     server.applyMiddleware({app});
     app.listen({ port: 4000 }, () =>
-    console.log(`🚀 Server ready and listening at ==> http://localhost:4000${server.graphqlPath}`))
+    console.log(`Server running at http://localhost:4000${server.graphqlPath}`))
 };
 
 main().catch((error)=>{

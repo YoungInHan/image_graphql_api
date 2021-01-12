@@ -1,10 +1,12 @@
 import { ObjectType, Field, ID } from "type-graphql";
-import { prop as Property, getModelForClass } from "@typegoose/typegoose";
+import { ObjectId } from 'mongodb';
+import { prop as Property, getModelForClass, Ref } from "@typegoose/typegoose";
+import { User } from "./Users";
 
 @ObjectType({ description: "The Picture model" })
 export class Picture {
     @Field(() => ID)
-    id: number; 
+    id: ObjectId; 
 
     @Field()
     @Property()
@@ -27,8 +29,12 @@ export class Picture {
     publicVisible: boolean;
 
     @Field(() => [String])
-    @Property({ type: () => String, default: [] })
+    @Property({ type: () => [String], default: [] })
     tags: String[];
+
+    @Field(() => User) 
+    @Property({ ref: User })
+    uploader?: Ref<User>;
 }
 
 export const PictureModel = getModelForClass(Picture);

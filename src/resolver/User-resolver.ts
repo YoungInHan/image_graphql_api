@@ -1,12 +1,14 @@
-import { Resolver, Mutation, Arg, Query, Ctx } from 'type-graphql';
+import { Resolver, Mutation, Arg, Query, Ctx, UseMiddleware } from 'type-graphql';
 import { User, UserModel } from '../entities/Users'
 import { UserInput } from './types/User-input'
 import bcrypt from 'bcrypt'
 import { MyContext } from '../types/MyContext'
+import { isAuth } from '../middleware/isAuth';
 
 @Resolver(_of => User)
 export class UserResolver {
 
+    @UseMiddleware(isAuth)
     @Query(() => String)
     async returnHelloWorld(){
       return "HEY WORLD"
@@ -31,11 +33,7 @@ export class UserResolver {
       @Arg("password") password: string,
       @Ctx() ctx: MyContext
     ): Promise<User | null> {
-      console.log(email)
-      console.log(password)
       const user = await UserModel.findOne({email: email})
-
-      console.log(user)
 
       if (!user) {
         return null;
@@ -54,7 +52,6 @@ export class UserResolver {
 
     @Query(() => User, {nullable: true})
     async me(@Ctx() ctx: MyContext) : Promise<User | null> {
-      console.log(ctx.req.session)
   
       if (!ctx.req.session.userId) {
         return null;
