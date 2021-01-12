@@ -1,6 +1,5 @@
-import { ObjectType, Field, ID, Int } from "type-graphql";
+import { ObjectType, Field, ID } from "type-graphql";
 import { prop as Property, getModelForClass } from "@typegoose/typegoose";
-import { __Type } from "graphql";
 
 @ObjectType({ description: "The Picture model" })
 export class Picture {
@@ -11,7 +10,7 @@ export class Picture {
     @Property()
     name: String;
 
-    @Field()
+    @Field({nullable: true})
     @Property()
     description: String;
 
@@ -22,6 +21,14 @@ export class Picture {
     @Field()
     @Property()
     uploadDate: Date;
+
+    @Field()
+    @Property()
+    publicVisible: boolean;
+
+    @Field(() => [String])
+    @Property({ type: () => String, default: [] })
+    tags: String[];
 }
 
 export const PictureModel = getModelForClass(Picture);

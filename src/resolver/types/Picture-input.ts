@@ -1,7 +1,6 @@
 import { InputType, Field } from "type-graphql";
 import { Length } from "class-validator";
 import { Picture } from "../../entities/Picture";
-import { ObjectId } from "mongodb";
 
 @InputType()
 export class PictureInput implements Partial<Picture> {
@@ -19,6 +18,9 @@ export class PictureInput implements Partial<Picture> {
   uploadDate: Date;
 
   @Field()
-  link: string
+  link: String;
+
+  @Field()
+  publicVisible: boolean;
 
 }
