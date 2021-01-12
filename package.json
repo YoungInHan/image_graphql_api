@@ -40,6 +40,6 @@
     },
     "scripts": {
         "start": "ts-node src/index.ts",
-        "postinstall": "npm run tsc"
+        "postinstall": "tsc"
     }
 }
