@@ -27,6 +27,8 @@ const main = async () => {
 
     const server = new ApolloServer({
         schema,
+        introspection: true,
+        playground: true,
         context: ({ req }: any) => ({ req }),
     })
     const app = Express()
