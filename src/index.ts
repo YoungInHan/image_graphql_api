@@ -59,7 +59,8 @@ const main = async () => {
         })
     )
     server.applyMiddleware({ app })
-    app.listen({ port: 4000 }, () =>
+    const port = Number(process.env.PORT)
+    app.listen({ port }, () =>
         console.log(
             `Server running at http://localhost:4000${server.graphqlPath}`
         )
