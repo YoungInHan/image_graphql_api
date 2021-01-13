@@ -51,6 +51,7 @@ const main = async () => {
             secret: 'aslkdfjoiq12312',
             resave: false,
             saveUninitialized: false,
+            proxy: true,
             cookie: {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
