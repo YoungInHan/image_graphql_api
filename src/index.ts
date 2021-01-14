@@ -6,10 +6,11 @@ import { connect } from 'mongoose'
 import session from 'express-session'
 import connectRedis from 'connect-redis'
 import cors from 'cors'
-
+import { graphqlUploadExpress } from 'graphql-upload'
 import { redis } from './redis'
 import { PictureResolver } from './resolver/Picture-resolver'
 import { UserResolver } from './resolver/User-resolver'
+import { SearchResolver } from './resolver/Search-resolver'
 
 import dotenv from 'dotenv'
 dotenv.config()
@@ -21,7 +22,7 @@ const main = async () => {
     await mongoose.connection
 
     const schema = await buildSchema({
-        resolvers: [UserResolver, PictureResolver],
+        resolvers: [UserResolver, PictureResolver, SearchResolver],
         dateScalarMode: 'timestamp',
     })
 
@@ -29,16 +30,16 @@ const main = async () => {
         schema,
         introspection: true,
         playground: true,
+        uploads: false,
         context: ({ req }: any) => ({ req }),
     })
     const app = Express()
 
     const RedisStore = connectRedis(session)
-
+    app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
     app.use(
         cors({
             credentials: true,
-            origin: 'http://localhost:3000',
         })
     )
 
