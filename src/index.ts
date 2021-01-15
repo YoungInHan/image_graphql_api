@@ -8,9 +8,9 @@ import connectRedis from 'connect-redis'
 import cors from 'cors'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { redis } from './redis'
-import { PictureResolver } from './resolver/Picture-resolver'
-import { UserResolver } from './resolver/User-resolver'
-import { SearchResolver } from './resolver/Search-resolver'
+import { PictureResolver } from './resolver/PictureResolver'
+import { UserResolver } from './resolver/UserResolver'
+import { SearchResolver } from './resolver/SearchResolver'
 
 import dotenv from 'dotenv'
 dotenv.config()
