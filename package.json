@@ -6,6 +6,7 @@
     "author": "Daniel Han <handanlol@gmail.com>",
     "license": "MIT",
     "devDependencies": {
+        "@types/aws-sdk": "^2.7.0",
         "@types/bcrypt": "^3.0.0",
         "@types/connect-redis": "^0.0.16",
         "@types/cors": "^2.8.9",
@@ -21,6 +22,7 @@
     "dependencies": {
         "@typegoose/typegoose": "^7.4.6",
         "apollo-server-express": "^2.19.1",
+        "aws-sdk": "^2.828.0",
         "bcrypt": "^5.0.0",
         "class-validator": "^0.12.2",
         "connect-redis": "^5.0.0",
@@ -29,6 +31,7 @@
         "express": "^4.17.1",
         "express-session": "^1.17.1",
         "graphql": "^15.4.0",
+        "graphql-upload": "^11.0.0",
         "ioredis": "^4.19.4",
         "mongoose": "5.10.18",
         "pg": "^8.5.1",
