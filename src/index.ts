@@ -33,10 +33,13 @@ const main = async () => {
         uploads: false,
         context: ({ req }: any) => ({ req }),
     })
+
     const app = Express()
 
     const RedisStore = connectRedis(session)
+
     app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }))
+
     app.use(
         cors({
             credentials: true,
@@ -49,7 +52,7 @@ const main = async () => {
                 client: redis as any,
             }),
             name: 'qid',
-            secret: 'aslkdfjoiq12312',
+            secret: process.env.MADE_SECRET as string,
             resave: false,
             saveUninitialized: false,
             proxy: true,
@@ -62,11 +65,7 @@ const main = async () => {
     )
     server.applyMiddleware({ app })
     const port = Number(process.env.PORT)
-    app.listen({ port }, () =>
-        console.log(
-            `Server running at http://localhost:4000${server.graphqlPath}`
-        )
-    )
+    app.listen({ port }, () => {})
 }
 
 main().catch((error) => {

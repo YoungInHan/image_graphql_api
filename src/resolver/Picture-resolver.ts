@@ -9,13 +9,16 @@ import {
 import { GraphQLUpload, FileUpload } from 'graphql-upload'
 import { Picture, PictureModel } from '../entities/Picture'
 import { UserModel } from '../entities/Users'
-import { PictureInput } from './types/Picture-input'
+import { PictureInput } from './input-types/Picture-input'
 import { isAuth } from '../middleware/isAuth'
 import { MyContext } from '../types/MyContext'
-// import AWS from 'aws-sdk'
+import AWS from 'aws-sdk'
 // import { Stream } from 'stream'
-import { createWriteStream } from 'fs'
+import { createWriteStream, readFileSync } from 'fs'
 // import { PutObjectRequest } from 'aws-sdk/clients/s3'
+
+import dotenv from 'dotenv'
+dotenv.config()
 
 // let uploadFromStream = (s3: any, key: string) => {
 //     var pass = new Stream.PassThrough()
@@ -41,14 +44,13 @@ export class PictureResolver {
         //@Arg('tags', () => [String]) tags: String[],
         @Arg('image', () => GraphQLUpload)
         { createReadStream, filename }: FileUpload
-    ): //@Ctx() ctx: MyContext
-    Promise<Boolean> {
-        // AWS.config.update({
-        //     accessKeyId: process.env.AWS_ACCESS_KEY as string,
-        //     secretAccessKey: process.env.AWS_SECRET_KEY as string,
-        //     region: process.env.AWS_REGION as string,
-        // })
-        // const s3 = new AWS.S3()
+    ): Promise<Boolean> {
+        AWS.config.update({
+            accessKeyId: process.env.AWS_ACCESS_KEY as string,
+            secretAccessKey: process.env.AWS_SECRET_KEY as string,
+            region: process.env.AWS_REGION as string,
+        })
+        const s3 = new AWS.S3()
 
         // const test = createReadStream()._read
         // const chunks: Buffer = []
@@ -79,14 +81,57 @@ export class PictureResolver {
         // // await picture.populate('uploader').execPopulate()
         // // return picture
         // return true
-        console.log(createReadStream())
-        console.log(`../images/${filename}`)
-        return new Promise(async (resolve, reject) =>
-            createReadStream()
-                .pipe(createWriteStream(`..\\images\\${filename}`))
-                .on('finish', () => resolve(true))
-                .on('error', () => reject(false))
-        )
+        // console.log(createReadStream())
+        const filepath = `${__dirname}\\images\\${filename}`
+        console.log(filepath)
+        createReadStream()
+            .pipe(createWriteStream(filepath))
+            .on('finish', async () => {
+                const fileContent = readFileSync(filepath)
+
+                const ye = `${Date.now()}-${filename}`
+                const params = {
+                    Bucket: process.env.S3_BUCKET as string,
+                    Key: ye, // File name you want to save as in S3
+                    Body: fileContent,
+                }
+
+                const response = await s3.upload(params).promise()
+                console.log(response)
+
+                const params2 = {
+                    Bucket: process.env.S3_BUCKET as string,
+                    Key: ye, // File name you want to save as in S3
+                    Expires: 60 * 5,
+                }
+
+                const url = await new Promise((resolve, reject) => {
+                    s3.getSignedUrl('getObject', params2, (err, url) => {
+                        err ? reject(err) : resolve(url)
+                    })
+                })
+                console.log(url)
+            })
+            .on('error', () => {
+                return false
+            })
+
+        return false
+        // if (written) {
+        //     readFile(
+        //         `${__dirname}\\images\\${filename}`,
+        //         function (_err, data) {
+        //             let params = {
+        //                 Bucket: process.env.S3_BUCKET,
+        //                 Key: Date.now() + '_' + filename,
+        //                 Body: data,
+        //             }
+        //             s3.upload(params, function (_err, data) {
+        //                 response.send(200, { key: data.key })
+        //             })
+        //         }
+        //     )
+        // }
     }
 
     @Mutation(() => Picture)

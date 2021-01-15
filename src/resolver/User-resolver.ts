@@ -7,7 +7,7 @@ import {
     UseMiddleware,
 } from 'type-graphql'
 import { User, UserModel } from '../entities/Users'
-import { UserInput } from './types/User-input'
+import { UserInput } from './input-types/User-input'
 import bcrypt from 'bcrypt'
 import { MyContext } from '../types/MyContext'
 import { isAuth } from '../middleware/isAuth'
