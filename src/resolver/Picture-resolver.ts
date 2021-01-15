@@ -9,7 +9,7 @@ import {
 import { GraphQLUpload, FileUpload } from 'graphql-upload'
 import { Picture, PictureModel } from '../entities/Picture'
 import { UserModel } from '../entities/Users'
-import { PictureInput } from './input-types/Picture-input'
+import { PictureInput } from './input-types/PictureInput'
 import { isAuth } from '../middleware/isAuth'
 import { MyContext } from '../types/MyContext'
 import AWS from 'aws-sdk'
