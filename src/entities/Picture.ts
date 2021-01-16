@@ -1,9 +1,15 @@
 import { ObjectType, Field, ID } from 'type-graphql'
 import { ObjectId } from 'mongodb'
-import { prop as Property, getModelForClass, Ref } from '@typegoose/typegoose'
+import {
+    prop as Property,
+    getModelForClass,
+    Ref,
+    Index,
+} from '@typegoose/typegoose'
 import { User } from './Users'
 
 @ObjectType({ description: 'The Picture model' })
+@Index({ tags: 'text' })
 export class Picture {
     @Field(() => ID)
     id: ObjectId

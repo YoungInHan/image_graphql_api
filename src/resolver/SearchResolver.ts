@@ -38,4 +38,18 @@ export class SearchResolver {
         })
         return picture
     }
+
+    @Query(() => [Picture])
+    async search(
+        @Arg('searchText') searchText: string
+    ): Promise<Picture[] | null> {
+        let pictures = await PictureModel.find({
+            $text: { $search: searchText },
+        })
+
+        for (let i = 0; i < pictures.length; i++) {
+            await pictures[i].populate('uploader').execPopulate()
+        }
+        return pictures
+    }
 }
