@@ -102,7 +102,6 @@ query {
   returnPublicPictures {
     name
     description
-    uploader
     uploader{
       username
     }

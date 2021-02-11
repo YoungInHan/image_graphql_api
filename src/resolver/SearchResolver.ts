@@ -11,17 +11,9 @@ export class SearchResolver {
     }
 
     @Query(() => [Picture])
-    async returnPublicPictures(
-        @Ctx() ctx: MyContext
-    ): Promise<Picture[] | null> {
+    async returnPublicPictures(): Promise<Picture[] | null> {
         let pictures = await PictureModel.find({ publicVisible: true })
-        if (ctx.req.session.userId) {
-            const privatePictures = await PictureModel.find({
-                publicVisible: false,
-                uploader: ctx.req.session.userId,
-            })
-            pictures = await PictureModel.aggregate([pictures, privatePictures])
-        }
+
         for (let i = 0; i < pictures.length; i++) {
             await pictures[i].populate('uploader').execPopulate()
         }
